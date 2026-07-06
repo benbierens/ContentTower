@@ -2,7 +2,7 @@
 <img src="content-tower-icon.svg"/>
 
 ## The idea
-ContentTower is an open-source stand-alone webservice that holds data for you. Fairly simple, really. It takes care to follow a loose storage quota, as well as clean up old files.
+ContentTower is an open-source stand-alone webservice that holds data for you. It takes care to follow a loose storage quota, as well as clean up old stuff.
 
 ## QuickStart
 I'm in a hurry. How do I use ContentTower?
@@ -12,11 +12,17 @@ I'm in a hurry. How do I use ContentTower?
 - Visit http://localhost:8082 to check out ContentTower.
 - Generate an OpenAPI client for your project using this [openapi.json](./ContentTower.IntegrationTests/openapi.json) file.
 
+## Content addressable
+Content is stored in ContentTower as an array of bytes. Content is uniquely identified by a content-identifier, CID. Each CID contains a hash of the data. If you upload the same data twice, it will result in the same CID. This way, ContentTower automatically de-duplicates data.
+
+## Pinning
+Pins (📌) control when data is deleted. The relation between pins and content is many-to-many: A single pin can hold multiple contents. A single content can be held by multiple pins. Content that has no pins associated with it, will be deleted. ContentTower allows you to create, delete, and update pins as you see fit. You can dynamically attach content to and detach content from any pin.
+
 ## Store Types
-ContentTower allows you to store content in one of three modes:
-- `Default` - Default option. Content is stored for a fixed length of time after upload.
-- `Temporary` - Content is stored for a short duration after last activity. Upload and download activity resets this timer.
-- `Permanent` - ContentTower will not delete this content, nor will it allow the normal delete operation to remove this content.
+Each pin has a store type. This determines the time behavior of the pin:
+- `Default` - Default option. The pin exists for a fixed length of time after creation.
+- `Temporary` - The pin exists for a short duration after the last activity for any content attached to it. Upload and download activity resets this timer.
+- `Permanent` - ContentTower will not remove this pin, nor will it allow the normal delete operation to remove this pin.
 
 ## Configuration
 The following aspects of ContentTower can be easily configured. You can use the standard dotnet appsettings approach, or environment variables.
